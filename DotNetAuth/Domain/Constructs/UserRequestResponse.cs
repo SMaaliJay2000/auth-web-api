@@ -1,4 +1,6 @@
-﻿namespace DotNetAuth.Domain.Constructs
+﻿using System.Text.Json.Serialization;
+
+namespace DotNetAuth.Domain.Constructs
 {
     public class UserRegisterRequest
     {
@@ -20,6 +22,8 @@
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public string? AccessToken { get; set; }
+
+        [JsonIgnore]
         public string? RefreshToken { get; set; }
     }
 

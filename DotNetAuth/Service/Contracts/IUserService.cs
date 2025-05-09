@@ -14,5 +14,6 @@ namespace DotNetAuth.Service.Contracts
         Task<CurrentUserResponse> RefreshTokenAsync(RefreshTokenRequest request);
 
         Task<UserResponse> LoginAsync(UserLoginRequest request);
+        Task LogoutAsync(Guid id);
     }
 }

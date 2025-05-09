@@ -105,7 +105,24 @@ namespace DotNetAuth.Service
 
             return userResponse;
         }
-        
+        public async Task LogoutAsync(Guid id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            if (user == null)
+            {
+                _logger.LogError("User not found");
+                throw new Exception("User not found");
+            }
+            else
+            {
+                user.RefreshToken = null;
+                user.RefreshTokenExpiryTime = null;
+
+                _logger.LogInformation($"User with id {user.Id} logged out");
+                await _userManager.UpdateAsync(user);
+            }
+        }
+
         public async Task<UserResponse> GetByIdAsync(Guid id)
         {
             _logger.LogInformation("Getting user by id");
@@ -268,5 +285,6 @@ namespace DotNetAuth.Service
             }
             return username;
         }
+
     }
 }
