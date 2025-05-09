@@ -1,0 +1,116 @@
+﻿using DotNetAuth.Domain.Constructs;
+using DotNetAuth.Service.Contracts;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace DotNetAuth.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AuthController : ControllerBase
+    {
+        private readonly IUserService _userService;
+
+        public AuthController(IUserService userService)
+        {
+            _userService = userService;
+        }
+
+
+        [HttpPost("register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RegisterAsync([FromBody] UserRegisterRequest request)
+        {
+            var response = await _userService.RegisterAsync(request);
+            return Ok(response);
+        }
+
+
+        [HttpPost("login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> LoginAsync([FromBody] UserLoginRequest request)
+        {
+            var response = await _userService.LoginAsync(request);
+            return Ok(response);
+        }
+
+
+        // Get user by id
+        [HttpGet("user/{id}")]
+        [Authorize]
+        public async Task<IActionResult> GetUserAsync(Guid id)
+        {
+            var response = await _userService.GetByIdAsync(id);
+            return Ok(response);
+        }
+
+
+        // Get all users
+        [HttpGet("users")]
+        [AllowAnonymous]
+        //[Authorize]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            var response = await _userService.GetAllAsync();
+            return Ok(response);
+        }
+
+
+        // Get new access token from refresh token
+        [HttpPost("refresh-token")]
+        [Authorize]
+        public async Task<IActionResult> RefreshTokenAsync([FromBody] RefreshTokenRequest request)
+        {
+            var response = await _userService.RefreshTokenAsync(request);
+            return Ok(response);
+        }
+
+
+        // Remove refresh token
+        [HttpPost("revoke-refresh-token")]
+        [Authorize]
+        public async Task<IActionResult> RevokeTokenAsync([FromBody] RefreshTokenRequest request)
+        {
+            var response = await _userService.RevokeRefreshToken(request);
+
+            if (response != null && response.Message == "Refresh token revoked successfully")
+            {
+                return Ok(response);
+            }
+            else
+            {
+                return BadRequest(response);
+            }
+        }
+
+
+        [HttpGet("current-user")]
+        [Authorize]
+        public async Task<IActionResult> GetCurrentUserAsync()
+        {
+            var response = await _userService.GetCurrentUserAsync();
+            return Ok(response);
+        }
+
+
+        // Update user by id
+        [HttpPut("update/{id}")] 
+        [Authorize]
+        public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UpdateUserRequest request)
+        {
+            var response = await _userService.UpdateAsync(id, request);
+            return Ok(response);
+        }
+
+
+        // Delete user
+        [HttpDelete("delete/{id}")] 
+        [Authorize]
+        public async Task<IActionResult> DeleteAsync(Guid id)
+        {
+            await _userService.DeleteAsync(id);
+            return Ok("User deleted successfully");
+        }
+    }
+}
