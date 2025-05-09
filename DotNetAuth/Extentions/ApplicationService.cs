@@ -62,7 +62,9 @@ namespace DotNetAuth.Extentions
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = jwtSettings.ValidIssuer,
                     ValidAudience = jwtSettings.ValidAudience,
-                    IssuerSigningKey = secretKey
+                    IssuerSigningKey = secretKey,
+
+                    ClockSkew = TimeSpan.Zero
                 };
                 o.Events = new JwtBearerEvents
                 {

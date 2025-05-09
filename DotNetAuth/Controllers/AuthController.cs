@@ -35,7 +35,7 @@ namespace DotNetAuth.Controllers
             var response = await _userService.LoginAsync(request);
 
             // Set refresh token in HttpOnly cookie
-            SetRefreshTokenCookie(response.RefreshToken);
+            SetRefreshTokenCookie(response.RefreshToken!);
 
             // Do not return refresh token in response
             response.RefreshToken = null;
@@ -66,7 +66,6 @@ namespace DotNetAuth.Controllers
 
         // Get all users
         [HttpGet("users")]
-        [AllowAnonymous]
         [Authorize]
         public async Task<IActionResult> GetAllAsync()
         {
@@ -77,7 +76,7 @@ namespace DotNetAuth.Controllers
 
         // Get new access token from refresh token
         [HttpPost("refresh-token")]
-        [Authorize]
+        [AllowAnonymous]
         public async Task<IActionResult> RefreshTokenAsync()
         {
             var refreshToken = Request.Cookies["refreshToken"];
@@ -88,7 +87,6 @@ namespace DotNetAuth.Controllers
 
             var response = await _userService.RefreshTokenAsync(new RefreshTokenRequest { RefreshToken = refreshToken });
 
-            // Optionally renew the refresh token cookie
             SetRefreshTokenCookie(refreshToken);
 
             return Ok(response);
@@ -118,6 +116,7 @@ namespace DotNetAuth.Controllers
         }
 
 
+        // Get current user
         [HttpGet("current-user")]
         [Authorize]
         public async Task<IActionResult> GetCurrentUserAsync()
