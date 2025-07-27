@@ -38,6 +38,11 @@ namespace DotNetAuth.Exceptions
                     response.Titel = exception.GetType().Name;
                     break;
 
+                case ArgumentException:
+                    response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    response.Titel = exception.GetType().Name;
+                    break;
+
                 default:
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     response.Titel = "Internal Server Error";
