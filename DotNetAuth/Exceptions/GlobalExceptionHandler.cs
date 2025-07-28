@@ -25,27 +25,27 @@ namespace DotNetAuth.Exceptions
             {
                 case BadHttpRequestException:
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    response.Titel = exception.GetType().Name;
+                    response.Title = exception.GetType().Name;
                     break;
 
                 case UnauthorizedAccessException:
                     response.StatusCode = (int)HttpStatusCode.Unauthorized;
-                    response.Titel = exception.GetType().Name;
+                    response.Title = exception.GetType().Name;
                     break;
 
                 case KeyNotFoundException:
                     response.StatusCode = (int)HttpStatusCode.NotFound;
-                    response.Titel = exception.GetType().Name;
+                    response.Title = exception.GetType().Name;
                     break;
 
                 case ArgumentException:
                     response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    response.Titel = exception.GetType().Name;
+                    response.Title = exception.GetType().Name;
                     break;
 
                 default:
                     response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    response.Titel = "Internal Server Error";
+                    response.Title = "Internal Server Error";
                     break;
             }
 
